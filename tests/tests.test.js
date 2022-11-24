@@ -18,6 +18,11 @@ describe('total likes', () => {
     const result = listHelper.totalLikes([])
     expect(result).toBe(0)
   })
+
+  test('of list with one blog is its own likes', () => {
+    const result = listHelper.totalLikes([blogs[0]])
+    expect(result).toBe(7)
+  })
 })
 
 describe('most likes', () => {
@@ -31,6 +36,11 @@ describe('most likes', () => {
     const result = listHelper.favoriteBlog([])
     expect(result).toBe(null)
   })
+
+  test('of list with one blog is its own likes', () => {
+    const result = listHelper.favoriteBlog([blogs[0]])
+    expect(result.likes).toBe(7)
+  })
 })
 
 describe('author with most blogs', () => {
@@ -43,17 +53,26 @@ describe('author with most blogs', () => {
   test('in empty list is null', () => {
     expect(listHelper.mostBlogs([])).toBe(null)
   })
+
+  test('of list with one blog is that blogs author', () => {
+    const result = listHelper.mostBlogs([blogs[0]])
+    expect(result.author).toBe("Michael Chan")
+  })
 })
 
 describe('author with most likes', () => {
   
   test('within a bigger list is calculated right', () => {
     const result = listHelper.mostLikes(blogs)
-    console.log(result)
     expect(result.author).toBe("Edsger W. Dijkstra")
   })
 
   test('in empty list is null', () => {
     expect(listHelper.mostLikes([])).toBe(null)
+  })
+
+  test('of list with one blog is that blogs author', () => {
+    const result = listHelper.mostLikes([blogs[0]])
+    expect(result.author).toBe("Michael Chan")
   })
 })
