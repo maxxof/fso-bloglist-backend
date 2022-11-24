@@ -27,7 +27,7 @@ const mostBlogs = (blogs) => {
     }
     var map = {}
     var favAuthor = "someone"
-    var max = 0
+    var maxBlogs = 0
     for (var i = 0; i < blogs.length; i++) {
 
         var author = blogs[i].author
@@ -35,18 +35,41 @@ const mostBlogs = (blogs) => {
         ? map[author] = 1
         : map[author]++
 
-        if (map[author] > max) {
-            max = map[author]
+        if (map[author] > maxBlogs) {
+            maxBlogs = map[author]
             favAuthor = author
         }
     }
-    return { author: favAuthor, blogs: max }
+    return { author: favAuthor, blogs: maxBlogs }
 }
 
+const mostLikes = (blogs) => {
+    if (blogs.length === 0) {
+        return null
+    }
+    var map = {}
+    var favAuthor = "someone"
+    var maxLikes = 0
+    for (var i = 0; i < blogs.length; i++) {
+
+        var author = blogs[i].author
+        var likes = blogs[i].likes
+        !map[author]
+        ? map[author] = likes
+        : map[author] += likes
+
+        if (map[author] > maxLikes) {
+            maxLikes = map[author]
+            favAuthor = author
+        }
+    }
+    return { author: favAuthor, likes: maxLikes }
+}
 
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
     mostBlogs,
+    mostLikes,
 }
