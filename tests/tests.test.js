@@ -33,3 +33,15 @@ describe('most likes', () => {
     expect(result).toBe(null)
   })
 })
+
+describe('author with most blogs', () => {
+  
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result.author).toBe("Robert C. Martin")
+  })
+
+  test('of empty list is null', () => {
+    expect(listHelper.mostBlogs([])).toBe(null)
+  })
+})

@@ -21,8 +21,32 @@ const favoriteBlog = (blogs) => {
     return favBlog
 }
 
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0) {
+        return null
+    }
+    var map = {}
+    var favAuthor = "someone"
+    var max = 0
+    for (var i = 0; i < blogs.length; i++) {
+
+        var author = blogs[i].author
+        !map[author]
+        ? map[author] = 1
+        : map[author]++
+
+        if (map[author] > max) {
+            max = map[author]
+            favAuthor = author
+        }
+    }
+    return { author: favAuthor, blogs: max }
+}
+
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
+    mostBlogs,
 }
