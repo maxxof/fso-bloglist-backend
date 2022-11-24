@@ -14,7 +14,7 @@ describe('total likes', () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(36)
   })
-  
+
   test('of empty list is zero', () => {
     const result = listHelper.totalLikes([])
     expect(result).toBe(0)
@@ -25,11 +25,11 @@ describe('most likes', () => {
 
   test('of a bigger list is calculated right', () => {
     const result = listHelper.favoriteBlog(blogs)
-    expect(result).toBe(12)
+    expect(result.title).toBe("Canonical string reduction")
   })
 
-  test('of empty list is zero', () => {
-    const result = listHelper.totalLikes([])
-    expect(result).toBe(0)
+  test('of empty list is null', () => {
+    const result = listHelper.favoriteBlog([])
+    expect(result).toBe(null)
   })
 })
