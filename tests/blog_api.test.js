@@ -132,6 +132,22 @@ test('updating title of a blog', async () => {
   expect(updatedBlog.title).toBe(blogTitleAfter)
 })
 
+test('cannot update blog with undefined title or url', async () => {
+  const blogsBeforeUpdate = await helper.blogsInDb()
+  const blogToUpdate = blogsBeforeUpdate[0]
+  const blogUrlBefore = blogToUpdate.url
+  delete blogToUpdate.url
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(blogToUpdate)
+    .expect(400)
+  
+  const blogsAfterUpdate = await helper.blogsInDb()
+  const updatedBlog = blogsAfterUpdate.find(b => b.id === blogToUpdate.id)
+  expect(updatedBlog.url).toBe(blogUrlBefore)
+
+})
 
 afterAll(() => {
   mongoose.connection.close()
