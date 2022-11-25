@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const blog = require('../models/blog')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./helper')
@@ -96,6 +97,41 @@ test('deleting blog succeeds with status code 204 if id is valid', async () => {
   const urls = blogsAfterDelete.map(b => b.url)
   expect(urls).not.toContain(blogToDel.url)
 })
+
+test('updating amount of likes of the blog post', async () => {
+  const blogsBeforeUpdate = await helper.blogsInDb()
+  const blogToUpdate = blogsBeforeUpdate[0]
+  blogToUpdate.likes++
+  const blogLikesAfter = blogToUpdate.likes
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(blogToUpdate)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  
+  const blogsAfterUpdate = await helper.blogsInDb()
+  const updatedBlog = blogsAfterUpdate.find(b => b.id === blogToUpdate.id)
+  expect(updatedBlog.likes).toBe(blogLikesAfter)
+})
+
+test('updating title of a blog', async () => {
+  const blogsBeforeUpdate = await helper.blogsInDb()
+  const blogToUpdate = blogsBeforeUpdate[0]
+  blogToUpdate.title = "new title"
+  const blogTitleAfter = blogToUpdate.title
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(blogToUpdate)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  
+  const blogsAfterUpdate = await helper.blogsInDb()
+  const updatedBlog = blogsAfterUpdate.find(b => b.id === blogToUpdate.id)
+  expect(updatedBlog.title).toBe(blogTitleAfter)
+})
+
 
 afterAll(() => {
   mongoose.connection.close()
