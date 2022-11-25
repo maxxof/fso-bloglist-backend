@@ -8,6 +8,9 @@ blogsRouter.get('/', async (req, res) => {
   
 blogsRouter.post('/', async (req, res) => {
     const body = req.body
+    if (!body.url || !body.title) {
+      return res.status(400).json({ error: `can't create a blog withour url and title`})
+    }
 
     const blog = new Blog({
       title: body.title,

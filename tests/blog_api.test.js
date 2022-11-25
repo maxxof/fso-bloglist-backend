@@ -52,7 +52,7 @@ test('blog without "likes" property gets 0 likes by default', async () => {
     author: 'someone important',
     url: 'long url',
   }
-  
+
   await api
     .post('/api/blogs')
     .send(newBlog)
@@ -64,6 +64,22 @@ test('blog without "likes" property gets 0 likes by default', async () => {
 
     const addedBlog = blogsAfterAdd.find(b => b.url === newBlog.url)
     expect(addedBlog.likes).toBe(0)
+})
+
+test('blog without title or url gets responed with code 400', async () => {
+  const newBlog = {
+    title: 'blahblahblah',
+    author: 'someone important',
+    likes: 10
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const blogsAfterAdd = await helper.blogsInDb()
+  expect(blogsAfterAdd).toHaveLength(helper.initialBlogs.length)
 })
 
 afterAll(() => {
