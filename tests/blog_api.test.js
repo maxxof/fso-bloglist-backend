@@ -8,7 +8,6 @@ const helper = require('./helper')
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
-    
 })
 
 test('returns correct amount of blogs in JSON', async () => {
@@ -33,6 +32,7 @@ test('a valid blog can be added', async () => {
         url: 'also something',
         likes: 100,
     }
+
     await api
         .post('/api/blogs')
         .send(newBlog)
@@ -44,6 +44,26 @@ test('a valid blog can be added', async () => {
 
     const urls = blogsAfterAdd.map(b => b.url)
     expect(urls).toContain(newBlog.url)
+})
+
+test('blog without "likes" property gets 0 likes by default', async () => {
+  const newBlog = {
+    title: 'blahblahblah',
+    author: 'someone important',
+    url: 'long url',
+  }
+  
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    const blogsAfterAdd = await helper.blogsInDb()
+    expect(blogsAfterAdd).toHaveLength(helper.initialBlogs.length + 1)
+
+    const addedBlog = blogsAfterAdd.find(b => b.url === newBlog.url)
+    expect(addedBlog.likes).toBe(0)
 })
 
 afterAll(() => {
