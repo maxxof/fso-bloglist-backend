@@ -82,6 +82,21 @@ test('blog without title or url gets responed with code 400', async () => {
   expect(blogsAfterAdd).toHaveLength(helper.initialBlogs.length)
 })
 
+test('deleting blog succeeds with status code 204 if id is valid', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDel = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDel.id}`)
+    .expect(204)
+
+  const blogsAfterDelete = await helper.blogsInDb()
+  expect(blogsAfterDelete).toHaveLength(helper.initialBlogs.length - 1)
+
+  const urls = blogsAfterDelete.map(b => b.url)
+  expect(urls).not.toContain(blogToDel.url)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
