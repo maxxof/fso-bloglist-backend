@@ -29,11 +29,14 @@ test('unique identifier of blog posts is named "id"', async () => {
 })
 
 test('a valid blog can be added', async () => {
+    const users = await helper.usersInDb()
+
     const newBlog = {
         title: 'something',
         author: 'someone',
         url: 'also something',
         likes: 100,
+        userId: users[0].id
     }
 
     await api
@@ -50,10 +53,13 @@ test('a valid blog can be added', async () => {
 })
 
 test('blog without "likes" property gets 0 likes by default', async () => {
+  const users = await helper.usersInDb()
+
   const newBlog = {
     title: 'blahblahblah',
     author: 'someone important',
     url: 'long url',
+    userId: users[0].id
   }
 
   await api
@@ -192,10 +198,12 @@ describe('when there is initially one user in db', () => {
       password: 'p',
     }
 
-    await api
+    const result = await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
+
+    expect(result.body.error).toContain('username and password must be atleast 3 characters long')
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtStart).toHaveLength(usersAtEnd.length)
@@ -210,11 +218,13 @@ describe('when there is initially one user in db', () => {
       password: 'valid',
     }
 
-    await api
+    const result = await api
       .post('/api/users')
       .send(existingUsername)
       .expect(400)
-    
+
+    expect(result.body.error).toContain('username must be unique')
+
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtStart).toHaveLength(usersAtEnd.length)
   })
