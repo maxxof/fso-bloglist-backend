@@ -5,6 +5,8 @@ const blog = require('../models/blog')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./helper')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -147,6 +149,39 @@ test('cannot update blog with undefined title or url', async () => {
   const updatedBlog = blogsAfterUpdate.find(b => b.id === blogToUpdate.id)
   expect(updatedBlog.url).toBe(blogUrlBefore)
 
+})
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('tPassword', 10)
+    const user = new User({ username: 'tUsername', name: 'tName', passwordHash })
+
+    await user.save()
+  })
+
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'maxxof',
+      name: 'max',
+      password: 'opsec',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
+  })
 })
 
 afterAll(() => {
