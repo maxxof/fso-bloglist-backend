@@ -182,6 +182,42 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
   })
+
+  test('invalid users are not created', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'invalidPassword',
+      name: 'whatever',
+      password: 'p',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtStart).toHaveLength(usersAtEnd.length)
+  })
+
+  test('username must be unique', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const existingUsername = {
+      username: 'tUsername',
+      name: 'whatever',
+      password: 'valid',
+    }
+
+    await api
+      .post('/api/users')
+      .send(existingUsername)
+      .expect(400)
+    
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtStart).toHaveLength(usersAtEnd.length)
+  })
 })
 
 afterAll(() => {

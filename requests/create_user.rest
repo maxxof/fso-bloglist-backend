@@ -3,6 +3,6 @@ Content-Type: application/json
 
 {
     "username": "maxxof",
-    "name": "max",
-    "password": "opsec"
+    "name": "name is optional",
+    "password": "password is not optional"
 }
