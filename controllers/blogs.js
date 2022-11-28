@@ -1,7 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog.js')
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 const userExtractor = require('../utils/middleware').userExtractor
 
 blogsRouter.get('/', async (req, res) => {
@@ -29,14 +28,12 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  console.log('didnt save')
   res.status(201).json(savedBlog)
 })
 
 blogsRouter.delete('/:id', userExtractor, async (req, res) => {
 
   const user = req.user
-  console.log(user)
 
   const blog = await Blog.findById(req.params.id)
   if (!blog) {
@@ -48,7 +45,6 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
   } else {
     res.status(401).json({ error: 'invalid user' })
   }
-
 })
 
 blogsRouter.put('/:id', async (req, res) => {
