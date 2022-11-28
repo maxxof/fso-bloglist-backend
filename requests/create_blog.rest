@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1heHhvZiIsImlkIjoiNjM4MzZiMGRjNTlhY2JjMWQ1NDY1MDBlIiwiaWF0IjoxNjY5NjI5MDIxfQ.C9qRHthZ1QOPgKN-NNr9U8qiaZOJs6wSL4FLsM_y_xU
+Authorization: Bearer eyhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1heHhvZiIsImlkIjoiNjM4MzZiMGRjNTlhY2JjMWQ1NDY1MDBlIiwiaWF0IjoxNjY5NjMwNTIzfQ.uJpCaNILlkZavo-ywISiPQIa6wRYPAcbHJ4s5ktlx0k
 
 {
     "title": "Blog can be created only if token is valid",
