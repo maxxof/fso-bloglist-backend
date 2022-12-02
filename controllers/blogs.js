@@ -54,8 +54,8 @@ blogsRouter.put('/:id', async (req, res) => {
     return res.status(400).json({ error: `cannot update a blog withour url and title`})
   }
   
-  const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, body, { new: true })
-  res.status(200).json(updatedBlog)
+  const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, body, { new: true }).populate('user', { username: 1, name: 1 })
+  return res.status(200).json(updatedBlog)
 })
 
 module.exports = blogsRouter
